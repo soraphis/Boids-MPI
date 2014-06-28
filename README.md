@@ -20,9 +20,9 @@ Boids Algorithm with MPI
 
 `Project › Properties` › `C/C++ Build › Settings`:
 
-C++ Compiler: `Command` $ mpic++ $ <br /> 
-├─ Preprocessor: `Defined Symbols` add $ __GXX_EXPERIMENTAL_CXX0X__ $ <br /> 
-└─ Miscellaneous: `other flags` $ c -fmessage-length=0 -std=c++0x $
+C++ Compiler: `Command`  mpic++  <br /> 
+├─ Preprocessor: `Defined Symbols` add  __GXX_EXPERIMENTAL_CXX0X__  <br /> 
+└─ Miscellaneous: `other flags`  c -fmessage-length=0 -std=c++0x 
 
 C++ Linker: `Command` $ mpic++ $ <br /> 
-└─ Libraries: `Libraries` $ SDL $
+└─ Libraries: `Libraries`  SDL 
