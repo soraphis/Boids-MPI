@@ -11,7 +11,7 @@ private:
 public:
     RuleAlignment();
     virtual ~RuleAlignment();
-    virtual void followRule(Boid &b, Boid *swarm, const int swarmsize);
+    virtual void followRule(Boid &b, std::vector<Boid> *swarm);
 };
 
 #endif // RULEALIGNMENT_H

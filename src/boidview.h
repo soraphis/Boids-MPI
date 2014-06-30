@@ -1,7 +1,7 @@
 #ifndef BOIDVIEW_H
 #define BOIDVIEW_H
 
-#include "boidmodel.h"
+#include "BoidModel.h"
 #include "SDL/SDL.h"
 #include <time.h>
 

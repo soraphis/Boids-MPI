@@ -10,7 +10,7 @@ class RuleCohesion : public IBoidRule
     public:
         RuleCohesion();
         virtual ~RuleCohesion();
-        virtual void followRule(Boid &b, Boid *swarm, const int swarmsize);
+        virtual void followRule(Boid &b, std::vector<Boid> *swarm);
     protected:
     private:
         Float2 tmpv;

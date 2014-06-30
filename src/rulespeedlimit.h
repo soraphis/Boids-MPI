@@ -8,7 +8,7 @@ class RuleSpeedLimit : public IBoidRule
 public:
     RuleSpeedLimit();
     virtual ~RuleSpeedLimit();
-    virtual void followRule(Boid &b, Boid *swarm, const int swarmsize);
+    virtual void followRule(Boid &b, std::vector<Boid> *swarm);
 };
 
 #endif // RULESPEEDLIMIT_H
