@@ -11,6 +11,7 @@
 #include "Float2.h"
 #include <time.h>
 #include <cmath>
+//#include <stdio.h>
 #include "rulecohesion.h"
 #include "rulespeedlimit.h"
 #include "rulereturnhome.h"
@@ -56,24 +57,32 @@ void FieldModel::update(){
 }
 
 void FieldModel::init(){
-
 	if(tID == 0){
 		printf("%d == %d \n", (long)floorf(sqrtf((float)tCount)), (long)sqrtf((float)tCount));
 		if((long)floorf(sqrtf((float)tCount)) != (long)sqrtf((float)tCount)){
-			printf("Die Anzahl der Prozesse muss eine Quadratzahl sein\n");
+			printf("Die Anzahl der Prozesse muss eine Quadratzahl sein (theoretisch nicht, ich wills aber so)\n");
 			system("exit");
 			return;
 		}
 	}
+	int tDim = (int)floorf(sqrtf((float)tCount));
 
 	srand(time(NULL));
 	for(int i = 0; i < s_SwarmSize; i++){
 		float *x = new float[2];
 		if(tID == 0){
-			x[0] = rand() % myField.width/1 + myField.width/1;
-			x[1] = rand() % myField.height/1 + myField.height/1;
+			x[0] = rand() % myField.width;
+			x[1] = rand() % myField.height;
+			int t = (x[0]*tDim)/((float)myField.width) + (x[1]*tDim*tDim)/((float)myField.height);
+			if(t != 0){
+				//sende boid zu task t
+			}else{
+				// kümmer dich selbst darum
+			}
+
 		}
-		MPI_Bcast(x,2,MPI_FLOAT,0,MPI_COMM_WORLD);
+
+		//MPI_Bcast(x,2,MPI_FLOAT,0,MPI_COMM_WORLD);
 
 		swarm[i].setPos(x[0], x[1]);
 		for(int j = 0; j < 5; j++){

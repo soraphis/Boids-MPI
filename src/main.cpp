@@ -6,12 +6,12 @@
 #include "IModel.h"
 #include "BoidModel.h"
 #include "FieldModel.h"
-#include "boidview.h"
+//#include "boidview.h"
 #include "test.h"
 
-BoidView* view;
+//BoidView* view;
 
-/* either
+//* either
 	FieldModel* model;
 /*/// or
 	BoidModel* model;
@@ -22,23 +22,23 @@ field myField = {250, 150};
 int tID;
 int tCount;
 long int actionsperminute = 0;
-bool visual = true;
+bool visual = false;
 
 void output_data(double* sec_init, double* sec_output);
 void input_data(int* numboids, int* timetorun);
 
 void init(){
     model->init();
-    if(tID == 0 && visual) view->init();
+//    if(tID == 0 && visual) view->init();
 }
 
 void update(){
     model->update();
-    if(tID == 0 && visual) view->update();
+//    if(tID == 0 && visual) view->update();
 }
 
 void close(bool &quit){
-    if(tID == 0 && visual) view->close(quit);
+//    if(tID == 0 && visual) view->close(quit);
 //    if(quit){
 //        model->close();
 //    }
@@ -63,13 +63,13 @@ int main(int argc, char** argv)
     MPI_Barrier(MPI_COMM_WORLD);
     MPI_Bcast(&numboids, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-    /* either
+    //* either
     	model = new FieldModel(numboids);
     /*/// or
     	model = new BoidModel(numboids);
     //*/
 
-    if(tID == 0) view = new BoidView(model);
+//    if(tID == 0) view = new BoidView(model);
 
     time(&t_init);
 

@@ -1,3 +1,11 @@
+.cproject
+.project
+.settings/
+Debug/
+Release/
+oprofile_data/
+output.png
+
 # Compiled Object files
 *.slo
 *.lo

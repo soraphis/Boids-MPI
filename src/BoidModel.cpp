@@ -73,8 +73,8 @@ void BoidModel::init(){
     for(int i = 0; i < s_SwarmSize; i++){
         float *x = new float[2];
         if(tID == 0){
-            x[0] = rand() % myField.width/1 + myField.width/1;
-            x[1] = rand() % myField.height/1 + myField.height/1;
+            x[0] = rand() % myField.width;
+            x[1] = rand() % myField.height;
         }
         MPI_Bcast(x,2,MPI_FLOAT,0,MPI_COMM_WORLD);
         Boid* b = new Boid(Float2(x[0], x[1]));
