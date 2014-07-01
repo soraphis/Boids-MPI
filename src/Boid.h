@@ -6,6 +6,7 @@
 #include <vector>
 #include <memory>
 
+
 class Boid
 {
     public:
@@ -14,7 +15,7 @@ class Boid
         virtual ~Boid();
         void    addRule(IBoidRule *rule);
 
-        void    followRules(Boid* swarm, const int swarmsize);
+        void    followRules(std::vector<Boid> *swarm);
         void    updatePosition();
 
         Float2  getPos() const { return m_position; }
@@ -27,13 +28,14 @@ class Boid
 		float 	getVelY() const { return m_velocity.getY(); }
         void    setVel(Float2 val) { m_velocity = val; }
         void    setVel(float x, float y) { m_velocity.setX(x); m_velocity.setY(y); }
-
+        bool	inRange(Boid *other, float range);
     protected:
     private:
         Float2 m_position;
         Float2 m_velocity;
 
-        std::vector<std::unique_ptr<IBoidRule>> m_rules;
+        //std::vector<std::unique_ptr<IBoidRule>> m_rules;
+        std::vector<std::shared_ptr<IBoidRule>> m_rules;
 };
 
 std::ostream& operator<<(std::ostream& os, Boid const& obj);

@@ -6,12 +6,12 @@
 #include <memory>
 
 Boid::Boid() : m_position(Float2()), m_velocity(Float2()){
-    std::vector<IBoidRule*> m_rules();
+    //std::vector<IBoidRule*> m_rules();
 }
 
 Boid::Boid(Float2 pos) : m_position(pos), m_velocity(Float2())
 {
-    std::vector<IBoidRule*> m_rules();
+    //std::vector<IBoidRule*> m_rules();
 }
 
 Boid::~Boid()
@@ -20,15 +20,25 @@ Boid::~Boid()
 }
 
 void Boid::addRule(IBoidRule* rule){
- //   this->m_rules.push_back(rule);
-    //this->m_rules.insert(rule);
+    //this->m_rules.push_back(rule);
+
     this->m_rules.emplace_back(rule);
+
 }
 
-void Boid::followRules(Boid *swarm, const int swarmsize){
-    for(unsigned int i = 0; i < this->m_rules.size(); i++){
-        m_rules[i]->followRule(*this, swarm, swarmsize);
-    }
+bool Boid::inRange(Boid *other, float range){
+	this->m_position.inRange(&(other->m_position), range);
+}
+
+void Boid::followRules(std::vector<Boid> *swarm){
+	for ( auto itr = m_rules.begin(), end = m_rules.end(); itr != end; itr++ )
+	{
+	    (*itr)->followRule(*this, swarm);
+	}
+
+//    for(unsigned int i = 0; i < this->m_rules.size(); i++){
+//        m_rules[i]->followRule(*this, swarm, swarmsize);
+//    }
 }
 
 void Boid::updatePosition(){

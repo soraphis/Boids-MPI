@@ -9,7 +9,7 @@ class RuleSeperation : public IBoidRule
 public:
     RuleSeperation();
     virtual ~RuleSeperation();
-    virtual void followRule(Boid &b, Boid *swarm, const int swarmsize);
+    virtual void followRule(Boid &b, std::vector<Boid> *swarm);
 private:
     Float2 tmpv;
     Float2 tmpw;

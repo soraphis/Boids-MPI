@@ -24,7 +24,7 @@ RuleReturnHome::~RuleReturnHome(){
 //    }
 }
 
-void RuleReturnHome::followRule(Boid &b, Boid *swarm, const int swarmsize){
+void RuleReturnHome::followRule(Boid &b, std::vector<Boid> *swarm){
 //    Float2 v;
 //    for(int i = 0; i < homecount; i ++){
 //        v = b.getPos() - homes[i].getPos();
