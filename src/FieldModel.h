@@ -11,6 +11,7 @@
 #include "IModel.h"
 #include "Boid.h"
 #include "IBoidRule.h"
+#include <vector>
 
 class FieldModel : public IModel{
 private:
@@ -23,7 +24,8 @@ public:
 	virtual ~FieldModel();
 	virtual void init();
 	virtual void update();
-	Boid*		swarm;
+	//Boid*		swarm;
+	std::vector<Boid> swarm;
 };
 
 #endif /* FIELDMODEL_H_ */
