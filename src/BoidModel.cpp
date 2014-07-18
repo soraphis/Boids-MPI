@@ -90,35 +90,36 @@ void BoidModel::init(){
 
 
 void BoidModel::update(){
+
 	for(int i = tID; i < ceil((float)s_SwarmSize/(float)tCount); i+=tCount){
         if(i % tCount == tID){ // should never b false
         	if(i < s_SwarmSize) swarm[i].followRules(&swarm);
         }
     }
-    for(int i = 0; i < s_SwarmSize; i++){
-        float *x = (float*) malloc(5*sizeof(float)) ;//new float[4];
-        if(i % tCount == tID && i < s_SwarmSize){
-            swarm[i].updatePosition();
-            x[4] = i;
-            x[0] = swarm[i].getPos().getX();
-            x[1] = swarm[i].getPos().getY();
-            x[2] = swarm[i].getVel().getX();
-            x[3] = swarm[i].getVel().getY();
-            // DEBUG:
-            //printf("process %d calculated \t boid %d to \t %.2f, \t%.2f \t with \t %.2f, \t%.2f \tvelocity vector \n", tID, i, x[0], x[1], x[2], x[3]);
-        }
-        MPI_Bcast(x, 5, MPI_FLOAT, i%tCount, MPI_COMM_WORLD);
-        if((int)x[4] % tCount != tID){
-            swarm[(int)x[4]].setPos(Float2(x[0], x[1]));
-            swarm[(int)x[4]].setVel(Float2(x[2], x[3]));
-            // DEBUG:
-            //printf("process %d moved \t boid %d to \t %.2f, \t%.2f \t with \t %.2f, \t%.2f \tvelocity vector \n", tID, (int)x[4], x[0], x[1], x[2], x[3]);
-        }
-        delete [] x;
-    }
+	// follow rules braucht die alten positionen deshalb seperate schleifen
+	for(int i = tID; i < ceil((float)s_SwarmSize/(float)tCount); i+=tCount){
+		if(i % tCount == tID){ // should never b false
+			swarm[i].updatePosition();
+		}
+	}
 
+	int t = 0;
+	for ( auto itr = swarm.begin(), end = swarm.end(); itr != end; itr++ ){
+		float *x = new float[5];
+		if(t == tID){
+			x[4] = t;
+			x[0] = swarm[t].getPos().getX();	x[1] = swarm[t].getPos().getY();
+			x[2] = swarm[t].getVel().getX();	x[3] = swarm[t].getVel().getY();
+		}
+		MPI_Bcast(x, 5, MPI_FLOAT, t, MPI_COMM_WORLD);
+		if((int)x[4] != tID){
+			swarm[(int)x[4]].setPos(Float2(x[0], x[1]));
+			swarm[(int)x[4]].setVel(Float2(x[2], x[3]));
+		}
+		t = (++t)%tCount; // t = [0 .. tCount-1]
+	}
 
-    if(tID == 0){
+	if(tID == 0){
         actionsperminute++;
     }
     MPI_Barrier(MPI_COMM_WORLD);
