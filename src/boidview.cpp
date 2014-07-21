@@ -20,6 +20,7 @@ BoidView::BoidView(BoidModel* model) : model(model)
 
 void BoidView::init(){
     SDL_Init(SDL_INIT_EVERYTHING);
+    if(tID == 0)
     screen = SDL_SetVideoMode(myField.width*3, myField.height*3, 32, SDL_SWSURFACE);
 }
 

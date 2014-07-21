@@ -6,10 +6,10 @@
 #include "IModel.h"
 #include "BoidModel.h"
 #include "FieldModel.h"
-//#include "boidview.h"
+#include "boidview.h"
 #include "test.h"
 
-//BoidView* view;
+BoidView* view;
 
 //* either
 	FieldModel* model;
@@ -22,23 +22,23 @@ field myField = {250, 150};
 int tID;
 int tCount;
 long int actionsperminute = 0;
-bool visual = false;
+bool visual = true;
 
 void output_data(double* sec_init, double* sec_output);
 void input_data(int* numboids, int* timetorun);
 
 void init(){
     model->init();
-//    if(tID == 0 && visual) view->init();
+    if(visual) view->init();
 }
 
 void update(){
     model->update();
-//    if(tID == 0 && visual) view->update();
+    if(visual) view->update();
 }
 
 void close(bool &quit){
-//    if(tID == 0 && visual) view->close(quit);
+    if(visual) view->close(quit);
 //    if(quit){
 //        model->close();
 //    }
