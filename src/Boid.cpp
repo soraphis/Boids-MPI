@@ -5,6 +5,8 @@
 #include <vector>
 #include <memory>
 
+extern int tID;
+
 Boid::Boid() : m_position(Float2()), m_velocity(Float2()){
     //std::vector<IBoidRule*> m_rules();
 }
@@ -33,7 +35,8 @@ bool Boid::inRange(Boid *other, float range){
 void Boid::followRules(std::vector<Boid> *swarm){
 	for ( auto itr = m_rules.begin(), end = m_rules.end(); itr != end; itr++ )
 	{
-	    (*itr)->followRule(*this, swarm);
+	   // printf("%d - %d: ", tID, this);
+		(*itr)->followRule(*this, swarm);
 	}
 
 //    for(unsigned int i = 0; i < this->m_rules.size(); i++){

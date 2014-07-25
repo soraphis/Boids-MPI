@@ -69,7 +69,8 @@ int main(int argc, char** argv)
     	model = new BoidModel(numboids);
     //*/
 
-//    if(tID == 0) view = new BoidView(model);
+//    if(tID == 0)
+	view = new BoidView(model);
 
     time(&t_init);
 

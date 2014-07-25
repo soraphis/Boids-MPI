@@ -5,5 +5,4 @@ struct field{
     int width, height;
 };
 
-
 #endif // TEST_H

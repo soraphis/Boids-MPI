@@ -17,30 +17,26 @@ RuleCohesion::~RuleCohesion()
 
 void RuleCohesion::followRule(Boid &b, std::vector<Boid> *swarm){
 	tmpv.setX(0); tmpv.setY(0);
-    int r = 0;
-    for ( auto itr = swarm->begin(), end = swarm->end(); itr != end; itr++ ){
-    	if( (*itr) != b){
-    		if( itr->inRange(&b, 100)){
-    			r++;
-    			tmpv += itr->getVel();
-    		}
-    	}
-    }
-//    for(int i = 0; i < swarmsize; i++){
-//        if((*swarm)[i] != b){
-//            Float2 e = (*swarm)[i].getPos();
-//            e -= b.getPos();
-//            if( e.getLengthSquared() < 100 ){
-//                r++;
-//                tmpv += (*swarm)[i].getVel();
-//            }else{
-//
-//            }
-//        }
-//    }
-    if(r == 0) return;
-    tmpv = tmpv * (1.0/(r)) - b.getVel();
-    tmpv = tmpv * 0.5 + b.getVel();
-    b.setVel(tmpv);
+	    int r = 0;
+	    for ( auto itr = swarm->begin(), end = swarm->end(); itr != end; itr++ ){
+	    	tmpv2.setX(0); tmpv2.setY(0);
+	    	if( (*itr) != b){
+	    		//*
+	    		if( itr->inRange(&b, 1000)){
+	    			r++;
+	    			tmpv += itr->getPos();
+	    		}
+	    		/*/
+	    		tmpv2 = b.getPos();
+	    		tmpv2 -= itr->getPos();
+	    		r++;
+	    		tmpv += itr->getPos() * (100/(tmpv2.getLengthSquared()));
+	    		//*/
+	    	}
+	    }
+	    if(r == 0) return;
+	    tmpv *= (1.0/(r)); tmpv -= b.getPos();
+	    tmpv *= 0.125; tmpv += b.getVel();
+	    b.setVel(tmpv);
 
 }

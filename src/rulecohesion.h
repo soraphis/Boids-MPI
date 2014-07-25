@@ -14,6 +14,7 @@ class RuleCohesion : public IBoidRule
     protected:
     private:
         Float2 tmpv;
+        Float2 tmpv2;
 };
 
 #endif // RULECOHESION_H

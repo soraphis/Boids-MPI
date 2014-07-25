@@ -21,9 +21,9 @@ extern int tID;
 
 BoidModel::BoidModel() : s_SwarmSize(2)
 {
-    //swarm = new Boid[s_SwarmSize];
-    //home = new Boid[1];
-    rules = new IBoidRule*[5];
+    //swarm  = new Boid[s_SwarmSize];
+    //home   = new Boid[1];
+    rules 	 = new IBoidRule*[5];
     rules[0] = new RuleCohesion();
     rules[1] = new RuleSeperation();
     rules[2] = new RuleAlignment();
@@ -33,10 +33,10 @@ BoidModel::BoidModel() : s_SwarmSize(2)
 
 BoidModel::BoidModel(int swarmsize){
     s_SwarmSize = swarmsize >= 2 ? swarmsize : 2;
-    //swarm = new Boid[s_SwarmSize];
-    //home = new Boid[1];
+    //swarm  = new Boid[s_SwarmSize];
+    //home   = new Boid[1];
 
-    rules = new IBoidRule*[5];
+    rules 	 = new IBoidRule*[5];
     rules[0] = new RuleCohesion();
     rules[1] = new RuleSeperation();
     rules[2] = new RuleAlignment();

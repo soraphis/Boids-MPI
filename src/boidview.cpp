@@ -8,11 +8,14 @@
 #include <mpi.h>
 #include <vector>
 #include <cmath>
+#include <assert.h>
 
 extern field myField;
 extern int tID;
+extern int dimX;
+extern int dimY;
 
-BoidView::BoidView(BoidModel* model) : model(model)
+BoidView::BoidView(FieldModel* model) : model(model)
 {
 	timer = clock();
 }
@@ -20,8 +23,10 @@ BoidView::BoidView(BoidModel* model) : model(model)
 
 void BoidView::init(){
     SDL_Init(SDL_INIT_EVERYTHING);
-    if(tID == 0)
-    screen = SDL_SetVideoMode(myField.width*3, myField.height*3, 32, SDL_SWSURFACE);
+    screen = SDL_SetVideoMode(myField.width*3/dimX, myField.height*3/dimY, 32, SDL_SWSURFACE);
+
+    SDL_FillRect(screen, &screen->clip_rect, 0x00ffffff);
+    SDL_Flip(screen);
 }
 
 void BoidView::update(){
@@ -34,14 +39,24 @@ void BoidView::update(){
     timer = clock();
 
 
-    Uint32 pixel = 0x0000ff00;
+    Uint32 pixel = 0x00000000;
     Uint32 *pixels = (Uint32 *)screen->pixels;
-    SDL_FillRect(screen, &screen->clip_rect, 0x00000000);
-//    printf("hi... %d", model->getSwarmSize());
+    SDL_FillRect(screen, &screen->clip_rect, 0x00ffffff);
+//  printf("hi... %d", model->getSwarmSize());
 
     for ( auto itr = model->swarm.begin(), end = model->swarm.end(); itr != end; itr++ ){
     	int x = (int)floorf(itr->getPosX());
     	int y = (int)floorf(itr->getPosY());
+    	if(x < 0 || y < 0) continue;
+    	x -= myField.width/dimX * tID%dimX;
+    	y -= myField.height/dimY * (tID/dimX);
+    	if(x < 0 || y < 0) continue;
+
+
+    	//assert(x >= 0); assert(y >= 0);
+
+
+
     	x *= 3; y *= 3;
         for(int _x = 0; _x < 3; _x++){
             for(int _y = 0; _y < 3; _y++){

@@ -6,9 +6,9 @@
  */
 
 #include "FieldModel.h"
-#include <mpi.h>
 #include "Boid.h"
 #include "Float2.h"
+#include <mpi.h>
 #include <time.h>
 #include <cmath>
 //#include <stdio.h>
@@ -73,8 +73,10 @@ bool getFieldSplit(int Area, int &a, int &b){
 int AreaOfPoint(float x, float y){
 	int _t1 = (int)(dimX*(float)x/(float)myField.width );
 	int _t2 = (int)(dimY*(float)y/(float)myField.height );
-	//int t = (_t1 + _t2 * dimX); assert(t >= 0); assert(t < tCount);
-	return (_t1 + _t2 * dimX);
+	int t = (_t1 + _t2 * dimX);
+	if(t < 0) printf("%d ← %.2f, %.2f", t, x, y),
+	assert(t >= 0); assert(t < tCount);
+	return t;
 }
 
 void FieldModel::init(){
@@ -99,7 +101,7 @@ void FieldModel::init(){
 		}
 		MPI_Bcast(x,3,MPI_FLOAT,0,MPI_COMM_WORLD);
 		if(tID == x[0]){ // task t empfängt boid
-			Boid* b = new Boid(Float2(x[0], x[1]));
+			Boid* b = new Boid(Float2(x[1], x[2]));
 			for(int j = 0; j < 5; j++){
 				b->addRule(rules[j]);
 			}
@@ -119,30 +121,29 @@ void FieldModel::update(){
 	int * outbox = new int[tCount]; // how many letters to house x
 	for(int i = 0; i < tCount; ++i) outbox[i] = 0;
 	int * inbox = new int[tCount];
-	//sleep(1);
+
 	printf("task %d hat %d Boids\n", tID, (int)swarm.size());
-	//if(tID == 0) printf("--1--");
-	for ( auto itr = swarm.begin(), end = swarm.end(); itr != end; itr++ ){
-		itr->followRules(&swarm);
-	}
-	//if(tID == 0) printf("--2--");
-	for ( auto itr = swarm.begin(), end = swarm.end(); itr != end; itr++ ){
+
+	for (auto itr = swarm.begin(), end = swarm.end(); itr != end; itr++){
 		itr->updatePosition();
+	}
+	for (auto itr = swarm.begin(), end = swarm.end(); itr != end; itr++)	itr->followRules(&swarm);
+	for (auto itr = swarm.begin(), end = swarm.end(); itr != end; itr++){
+
+		if(itr->getPosX() < 0 || itr->getPosX() >= myField.width ) printf("%.2f, %.2f", itr->getPosX(), itr->getVelX());
+
+		assert((int)itr->getPosX() >= 0); assert((int)itr->getPosX() < myField.width);
+		assert((int)itr->getPosY() >= 0); assert((int)itr->getPosY() < myField.height);
 
 		int t = AreaOfPoint((float)itr->getPosX(), (float)itr->getPosY());
-		if( t != tID ){
-			// dont know what i do
+		if( t != tID && t >= 0 && t < tCount ){
 			out.push_back({*itr, t});
 			itr = swarm.erase(itr);
 			outbox[t]++;
 		}
 	}
 	MPI_Barrier(MPI_COMM_WORLD);
-	//if(tID == 0) printf("--3--\n");
 	for(int i = 0; i < tCount; ++i){// each prozess asks every other process how many letters he'll receive
-		//MPI_Reduce( outbox+i, &inbox, 1, MPI_INT, MPI_SUM, i ,MPI_COMM_WORLD);
-		//if(tID == 0)
-		//printf("process %d sends %d: %d letter(s):\n",tID, i, outbox[i]);
 		MPI_Gather(&(outbox[i]), 1, MPI_INT, inbox, 1, MPI_INT, i, MPI_COMM_WORLD);
 	}
 
@@ -160,53 +161,47 @@ void FieldModel::update(){
 	//printf("write letters \n");
 	float ** y = new float*[tCount];
 	for(int r = 0; r < tCount; r++){
-		int i = 0;
 		if(tID == r){
 			y[r] = new float[4];
 		}else{
 			y[r] = new float[4*(outbox[r]+1)];
 
+			int i = 0;
 			for ( auto itr = out.begin(), end = out.end(); itr != end; itr++ ){
-				if(itr->second != i) continue;
+				if(itr->second != r){
+					//itr++;
+					continue;
+				}
 				y[r][0 + i*4] = itr->first.getPosX();
 				y[r][1 + i*4] = itr->first.getPosY();
 				y[r][2 + i*4] = itr->first.getVelX();
 				y[r][3 + i*4] = itr->first.getVelY();
 				i++;
-				out.erase(itr);
+				//itr = out.erase(itr);
 			}
 		}
-		// filler message: values show it cant be a boid
-//		y[r][0 + i*4] = -5; // would fail rulereturnhome
-//		y[r][1 + i*4] = -5;
-//		y[r][2 + i*4] = 5;  // would fail rulespeedlimit
-//		y[r][3 + i*4] = 5;
 	}
 	MPI_Barrier(MPI_COMM_WORLD);
-//	printf("send letters \n");
-//	for(int s = 0; s < tCount; s++){
-		for(int r = 0; r < tCount; r++){
-				float * x = NULL;
-				if(tID == r) x = new float[std::max(inboxsize, 1)];
-				assert(outbox[r] >= 0);
-				assert(inboxsize >= 0);
-				MPI_Gatherv(y[r], 4*outbox[r], MPI_FLOAT, x, inbox, displs, MPI_FLOAT, r, MPI_COMM_WORLD);
-			  //MPI_Gatherv(void*, int, MPI_Datatype, void*, int, int*, MPI_Datatype, int, MPI_Comm)
-				if(tID != r) continue;
-				for(int i = 0; i < inboxsize; i+=4){
-//					if(x[0+i*4] == -5 && x[1+i*4] == -5 && x[2+i*4] == 5 && x[3+i*4] == 5){
-//						continue;
-//					}
-					Boid b(Float2(x[0+i*4],x[1+i*4]));
-					b.setVel(x[2+i*4],x[3+i*4]);
-					swarm.push_back(b);
-
-				}
+	for(int r = 0; r < tCount; r++){
+		float * x = NULL;
+		if(tID == r) x = new float[std::max(inboxsize, 1)];
+		assert(outbox[r] >= 0);
+		assert(inboxsize >= 0);
+		MPI_Gatherv(y[r], 4*outbox[r], MPI_FLOAT, x, inbox, displs, MPI_FLOAT, r, MPI_COMM_WORLD);
+		//MPI_Gatherv(void*, int, MPI_Datatype, void*, int, int*, MPI_Datatype, int, MPI_Comm)
+		if(tID != r) continue;
+		for(int i = 0; i < inboxsize*0.25; i++){
+			Boid * b = new Boid(Float2(x[0+i*4],x[1+i*4]));
+			b->setVel(x[2+i*4],x[3+i*4]);
+			assert(b->getPosX() >= 0); assert(b->getPosX() < myField.width);
+			assert(b->getPosY() >= 0); assert(b->getPosY() < myField.height);
+			for(int j = 0; j < 5; j++){
+				b->addRule(rules[j]);
+			}
+			swarm.push_back(*b);
 		}
-		MPI_Barrier(MPI_COMM_WORLD);
-//		printf("letters send \n");
-//	}
-//	printf("all letters send \n");
+	}
+	MPI_Barrier(MPI_COMM_WORLD);
 	///----------------
 /*
 	for(int sender = 0; sender < tCount; ++sender){
@@ -293,13 +288,10 @@ void FieldModel::update(){
 	}
 	delete [] x;
 	*/
-	//sleep(1);
 
 	//printf("task %d hat %d Boids\n", tID, (int)swarm.size());
 	//MPI_Barrier(MPI_COMM_WORLD);
 	//sleep(1);
-	//if(tID == 0) printf("\n\n");
-//	printf("%d \n", actionsperminute);
 	actionsperminute++;
 
 }
