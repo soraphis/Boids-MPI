@@ -111,7 +111,7 @@ void FieldModel::init(){
 		delete [] x;
 	}
 	MPI_Barrier(MPI_COMM_WORLD);
-//	printf("task %d hat %d Boids\n", tID, (int)swarm.size());
+	//printf("task %d hat %d Boids\n", tID, (int)swarm.size());
 }
 
 
@@ -122,7 +122,7 @@ void FieldModel::update(){
 	for(int i = 0; i < tCount; ++i) outbox[i] = 0;
 	int * inbox = new int[tCount];
 
-	printf("task %d hat %d Boids\n", tID, (int)swarm.size());
+//	printf("task %d hat %d Boids\n", tID, (int)swarm.size());
 
 	for (auto itr = swarm.begin(), end = swarm.end(); itr != end; itr++){
 		itr->updatePosition();
@@ -159,6 +159,7 @@ void FieldModel::update(){
 
 	///----------------
 	//printf("write letters \n");
+	MPI_Barrier(MPI_COMM_WORLD);
 	float ** y = new float*[tCount];
 	for(int r = 0; r < tCount; r++){
 		if(tID == r){

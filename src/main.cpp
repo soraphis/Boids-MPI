@@ -9,7 +9,7 @@
 #include "boidview.h"
 #include "test.h"
 
-BoidView* view;
+//BoidView* view;
 
 //* either
 	FieldModel* model;
@@ -22,23 +22,23 @@ field myField = {250, 150};
 int tID;
 int tCount;
 long int actionsperminute = 0;
-bool visual = true;
+bool visual = false;
 
 void output_data(double* sec_init, double* sec_output);
 void input_data(int* numboids, int* timetorun);
 
 void init(){
     model->init();
-    if(visual) view->init();
+//    if(visual) view->init();
 }
 
 void update(){
     model->update();
-    if(visual) view->update();
+//    if(visual) view->update();
 }
 
 void close(bool &quit){
-    if(visual) view->close(quit);
+//    if(visual) view->close(quit);
 //    if(quit){
 //        model->close();
 //    }
@@ -70,7 +70,7 @@ int main(int argc, char** argv)
     //*/
 
 //    if(tID == 0)
-	view = new BoidView(model);
+//	view = new BoidView(model);
 
     time(&t_init);
 
