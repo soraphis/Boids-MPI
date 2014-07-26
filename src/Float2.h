@@ -2,6 +2,8 @@
 #define FLOAT2_H
 
 #include <string>
+//#include "lib/fixed_point.h"
+//#define float fpml::fixed_point<int, 8>
 
 class Float2
 {
@@ -40,4 +42,6 @@ const Float2    operator+(Float2 const& lhs, Float2 const& rhs);
 const Float2    operator-(Float2 const& lhs, Float2 const& rhs);
 //inline const Float2    operator*(Float2 const& lhs, Fgloat2 const& rhs);
 const Float2    operator*(Float2 const& lhs, float const& rhs);
+
+//#undef float
 #endif // FLOAT2_H

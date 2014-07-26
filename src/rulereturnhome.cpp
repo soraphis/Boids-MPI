@@ -56,7 +56,7 @@ void RuleReturnHome::followRule(Boid &b, std::vector<Boid> *swarm){
     tmpv.setX(((int)round(b.getPosX()) + myField.width) %myField.width );
     tmpv.setY(((int)round(b.getPosY()) + myField.height)%myField.height );
 
-    if(tmpv.getX() < 0) printf("%2.f, %d → %.2f", b.getPosX(), sizeof(b.getPosX()), tmpv.getX());
+//    if(tmpv.getX() < 0) printf("%2.f, %d → %.2f", b.getPosX(), sizeof(b.getPosX()), tmpv.getX());
 
 //    assert(tmpv.getX() >= 0);assert(tmpv.getX() < myField.width);
 //	assert(tmpv.getY() >= 0);assert(tmpv.getY() < myField.height);

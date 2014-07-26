@@ -60,11 +60,11 @@ BoidModel::~BoidModel(){
 }
 
 void BoidModel::print(){
-    for(int i = 0; i < s_SwarmSize; i++){
-        printf("%d has boid %d on position:\t[% .2f, % .2f]\t→\t[% .2f, % .2f]\n",
-               tID, i, swarm[i].getPos().getX(), swarm[i].getPos().getY(),
-               swarm[i].getVel().getX(), swarm[i].getVel().getY());
-    }
+//    for(int i = 0; i < s_SwarmSize; i++){
+////        printf("%d has boid %d on position:\t[% .2f, % .2f]\t→\t[% .2f, % .2f]\n",
+////               tID, i, swarm[i].getPos().getX(), swarm[i].getPos().getY(),
+////               swarm[i].getVel().getX(), swarm[i].getVel().getY());
+//    }
 }
 
 void BoidModel::init(){

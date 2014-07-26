@@ -27,12 +27,13 @@ void RuleSeperation::followRule(Boid &b, std::vector<Boid> *swarm){
     tmpv.setX(0); tmpv.setY(0);
     for ( auto itr = swarm->begin(), end = swarm->end(); itr != end; itr++ ){
     	if( (*itr) != b){
-        tmpw.setX(itr->getPosX() - itr->getPosX());
-        tmpw.setY(itr->getPosY() - itr->getPosY());
         //tmpw -= Float2(b.getPos().getX(), b.getPos().getY());
-        if(tmpw.getLengthSquared() < 16){
-            tmpv -= tmpw;
-        }
+        //if(tmpw.getLengthSquared() < 16){
+    		if( itr->inRange(&b, 16)){
+    			tmpw.setX(itr->getPosX() - itr->getPosX());
+    			tmpw.setY(itr->getPosY() - itr->getPosY());
+    			tmpv -= tmpw;
+    		}
     	}
     }
     b.setVel(b.getVel()+tmpv);

@@ -111,34 +111,31 @@ void FieldModel::init(){
 		delete [] x;
 	}
 	MPI_Barrier(MPI_COMM_WORLD);
-	//printf("task %d hat %d Boids\n", tID, (int)swarm.size());
+	printf("task %d hat %d Boids\n", tID, (int)swarm.size());
 }
 
 
 void FieldModel::update(){
 	MPI_Barrier(MPI_COMM_WORLD);
-	std::vector<std::pair<Boid, int>> out;
+	std::vector<std::pair<Boid*, int>> out;
 	int * outbox = new int[tCount]; // how many letters to house x
 	for(int i = 0; i < tCount; ++i) outbox[i] = 0;
 	int * inbox = new int[tCount];
 
 //	printf("task %d hat %d Boids\n", tID, (int)swarm.size());
 
-	for (auto itr = swarm.begin(), end = swarm.end(); itr != end; itr++){
-		itr->updatePosition();
-	}
+	for (auto itr = swarm.begin(), end = swarm.end(); itr != end; itr++) 	itr->updatePosition();
 	for (auto itr = swarm.begin(), end = swarm.end(); itr != end; itr++)	itr->followRules(&swarm);
 	for (auto itr = swarm.begin(), end = swarm.end(); itr != end; itr++){
-
 		if(itr->getPosX() < 0 || itr->getPosX() >= myField.width ) printf("%.2f, %.2f", itr->getPosX(), itr->getVelX());
-
 		assert((int)itr->getPosX() >= 0); assert((int)itr->getPosX() < myField.width);
 		assert((int)itr->getPosY() >= 0); assert((int)itr->getPosY() < myField.height);
 
 		int t = AreaOfPoint((float)itr->getPosX(), (float)itr->getPosY());
 		if( t != tID && t >= 0 && t < tCount ){
-			out.push_back({*itr, t});
-			itr = swarm.erase(itr);
+			//std::pair<Boid*, int> a();
+			out.push_back({&(*itr), t});
+			swarm.erase(itr);
 			outbox[t]++;
 		}
 	}
@@ -154,7 +151,7 @@ void FieldModel::update(){
 	for(int i = 0; i < tCount; i++){
 		inbox[i] *= 4;
 		inboxsize += inbox[i];
-		if(i < tCount -1) displs[i+1] = inbox[i];
+		if(i < tCount -1) displs[i+1] = inboxsize;
 	}
 
 	///----------------
@@ -173,10 +170,10 @@ void FieldModel::update(){
 					//itr++;
 					continue;
 				}
-				y[r][0 + i*4] = itr->first.getPosX();
-				y[r][1 + i*4] = itr->first.getPosY();
-				y[r][2 + i*4] = itr->first.getVelX();
-				y[r][3 + i*4] = itr->first.getVelY();
+				y[r][0 + i*4] = itr->first->getPosX();
+				y[r][1 + i*4] = itr->first->getPosY();
+				y[r][2 + i*4] = itr->first->getVelX();
+				y[r][3 + i*4] = itr->first->getVelY();
 				i++;
 				//itr = out.erase(itr);
 			}

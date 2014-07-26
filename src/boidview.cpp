@@ -22,15 +22,17 @@ BoidView::BoidView(FieldModel* model) : model(model)
 
 
 void BoidView::init(){
+//	if(tID != 0) return;
     SDL_Init(SDL_INIT_EVERYTHING);
     screen = SDL_SetVideoMode(myField.width*3/dimX, myField.height*3/dimY, 32, SDL_SWSURFACE);
+//    screen = SDL_SetVideoMode(myField.width*3, myField.height*3, 32, SDL_SWSURFACE);
 
     SDL_FillRect(screen, &screen->clip_rect, 0x00ffffff);
     SDL_Flip(screen);
 }
 
 void BoidView::update(){
-
+//	if(tID != 0) return;
 
     double d = ((double)clock()-timer) / ((double)CLOCKS_PER_SEC);
     if(d < 30){

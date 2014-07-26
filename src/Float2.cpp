@@ -1,6 +1,8 @@
 #include "Float2.h"
 
 #include <sstream>
+//#include "lib/fixed_point.h"
+//#define float fpml::fixed_point<int, 8>
 
 static Float2* tmp_e = new Float2(0, 0);
 
@@ -87,3 +89,5 @@ const Float2    operator*(Float2 const& lhs, float const& rhs){
 std::ostream& operator<<(std::ostream& os, Float2 const& obj){
     return os << "(" << obj.getX() << ", " << obj.getY() << ")";
 }
+
+//#undef float
