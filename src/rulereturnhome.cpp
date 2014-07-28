@@ -53,8 +53,8 @@ void RuleReturnHome::followRule(Boid &b, std::vector<Boid> *swarm){
 //    tmpv.setX(b.getPosX()-(int)b.getPosX());
 //    tmpv.setY(b.getPosY()-(int)b.getPosY());
 
-    tmpv.setX(((int)round(b.getPosX()) + myField.width) %myField.width );
-    tmpv.setY(((int)round(b.getPosY()) + myField.height)%myField.height );
+    tmpv.setX(((int)round(b.getPosX()) + myField.width )%myField.width );
+    tmpv.setY(((int)round(b.getPosY()) + myField.height)%myField.height);
 
 //    if(tmpv.getX() < 0) printf("%2.f, %d → %.2f", b.getPosX(), sizeof(b.getPosX()), tmpv.getX());
 

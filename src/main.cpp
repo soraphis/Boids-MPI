@@ -6,7 +6,7 @@
 #include "IModel.h"
 #include "BoidModel.h"
 #include "FieldModel.h"
-#include "boidview.h"
+//#include "boidview.h"
 #include "test.h"
 
 //BoidView* view;
@@ -99,7 +99,7 @@ int main(int argc, char** argv)
         if(i == 1) quit = true;
     }
 //    model->print();		// DEBUG
-    printf("%d: quit now\n", tID);
+    if(tID == 0) printf("quit now\n", tID);
 //  delete model; model = NULL; → throws segmentation fault, but does not matter cause program ends now
 
     MPI_Finalize();

@@ -111,7 +111,7 @@ void FieldModel::init(){
 		delete [] x;
 	}
 	MPI_Barrier(MPI_COMM_WORLD);
-	printf("task %d hat %d Boids\n", tID, (int)swarm.size());
+//	printf("task %d hat %d Boids\n", tID, (int)swarm.size());
 }
 
 
