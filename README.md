@@ -16,6 +16,12 @@ Boids Algorithm with MPI
     $ sudo apt install libsdl1.2-dev libsdl1.2debian
   
 
+### Boost
+
+Required for the included fixedpoint-math library
+
+    $ sudo apt-get install libboost-all-dev
+
 ## Setup Eclipse
 
 `Project › Properties` › `C/C++ Build › Settings`:
